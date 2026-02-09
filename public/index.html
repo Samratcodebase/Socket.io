@@ -6,9 +6,33 @@
     <title>Document</title>
   </head>
   <body>
+    <div>
+      <input type="text" placeholder="Type Your message" id="message-input" />
+      <button id="Send-button">Send</button>
+    </div>
+    <div class="message">
+      <ul id="msgContainer"></ul>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      console.log("CLIENT JS LOADED");
+
       const socket = io();
+      const messageInput = document.getElementById("message-input");
+      const sendButton = document.getElementById("Send-button");
+      const msgContainer = document.getElementById("msgContainer");
+
+      socket.on("server-message", (serverMSG) => {
+        const li = document.createElement("li");
+        li.innerText = serverMSG;
+        msgContainer.appendChild(li);
+      });
+
+      sendButton.addEventListener("click", () => {
+        const msg = messageInput.value;
+        socket.emit("client-message", msg);
+      });
     </script>
   </body>
 </html>
